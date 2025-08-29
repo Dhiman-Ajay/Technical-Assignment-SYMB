@@ -79,14 +79,14 @@ def fetch_open_meteo_data(latitude, longitude, days_ago=2):
 # --- Flask Endpoints ---
 @app.route('/')
 def home():
-    return "Welcome to the Weather Report Service! <br> Use /weather-report, /export/excel, or /export/pdf endpoints."
+    return "Weather Report Service! <br> Use /weather-report, /export/excel, or /export/pdf endpoints."
 
 @app.route('/weather-report')
 def weather_report():
     latitude = request.args.get('lat', type=float)
     longitude = request.args.get('lon', type=float)
     if latitude is None or longitude is None:
-        return jsonify({"error": "Please provide latitude and longitude parameters"}), 400
+        return jsonify({"error": "Provide latitude & longitude parameter"}), 400
     create_table()
     hourly_data = fetch_open_meteo_data(latitude, longitude, days_ago=2)
     if hourly_data:
@@ -99,7 +99,7 @@ def export_excel():
     latitude = request.args.get('lat', type=float)
     longitude = request.args.get('lon', type=float)
     if latitude is None or longitude is None:
-        return jsonify({"error": "Please provide latitude and longitude parameters"}), 400
+        return jsonify({"Invalid": "provide latitude & longitude paramtr"}), 400
     data = get_weather_data_for_export(latitude, longitude)
     if not data:
         return jsonify({"message": "No data available to generate Excel."}), 404
@@ -116,7 +116,7 @@ def export_pdf():
     longitude = request.args.get('lon', type=float)
 
     if latitude is None or longitude is None:
-        return jsonify({"error": "Please provide latitude and longitude parameters"}), 400
+        return jsonify({"Invalid": "Provide latitude & longitude paramtr"}), 400
 
     data = get_weather_data_for_export(latitude, longitude)
     if not data:
@@ -143,7 +143,7 @@ def export_pdf():
     fig.legend(loc="upper left", bbox_to_anchor=(0.1, 0.9))
     
     chart_img_buffer = io.BytesIO()
-    plt.savefig(chart_img_buffer, format='png', bbox_inches='tight')
+    plt.savefig(chart_img_buffer, format='svg', bbox_inches='tight')
     chart_img_buffer.seek(0)
     plt.close(fig)
 
